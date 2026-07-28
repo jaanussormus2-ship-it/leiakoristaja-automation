@@ -1,0 +1,32 @@
+name: Leiakoristaja Automation
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: '0 3 * * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Show current date
+        run: date
+
+      - name: Test API Secrets
+        env:
+          BD_API_KEY: ${{ secrets.BD_API_KEY }}
+          BD_SITE_URL: ${{ secrets.BD_SITE_URL }}
+        run: |
+          echo "Site: $BD_SITE_URL"
+
+          if [ -z "$BD_API_KEY" ]; then
+            echo "❌ API Key puudub!"
+            exit 1
+          else
+            echo "✅ API Key leitud."
+          fi
