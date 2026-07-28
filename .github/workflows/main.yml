@@ -7,22 +7,22 @@ on:
     - cron: '0 3 * * *'
 
 jobs:
-  test:
+  api-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Show current date
-        run: date
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
 
-      - name: Test API Secrets
+      - name: Run API Test
         env:
           BD_API_KEY: ${{ secrets.BD_API_KEY }}
           BD_SITE_URL: ${{ secrets.BD_SITE_URL }}
-        run: |
-          echo "Site: $BD_SITE_URL"
+        run: php scripts/test_api.php
 
           if [ -z "$BD_API_KEY" ]; then
             echo "❌ API Key puudub!"
